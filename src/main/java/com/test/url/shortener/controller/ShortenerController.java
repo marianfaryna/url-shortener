@@ -53,8 +53,6 @@ public class ShortenerController {
 
     @GetMapping("/ping")
     public String ping() {
-
-
         return "I'm alive";
 
     }

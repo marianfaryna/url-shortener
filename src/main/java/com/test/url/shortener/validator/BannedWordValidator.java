@@ -1,5 +1,6 @@
 package com.test.url.shortener.validator;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class BannedWordValidator {
     private Set<String> bannedWords;
@@ -23,7 +25,7 @@ public class BannedWordValidator {
                     .lines(Paths.get(getClass().getClassLoader().getResource("fileTest.txt").toURI()))
                     .collect(Collectors.toSet());
         } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
+            log.warn("Error reading banned words list");
         }
     }
 
