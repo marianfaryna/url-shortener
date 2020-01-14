@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-import java.util.UUID;
 
 @Component
 public class AlphabeticalAlgorithm implements ShortenAlgorithm {
@@ -20,25 +19,36 @@ public class AlphabeticalAlgorithm implements ShortenAlgorithm {
     private final int arrayLength;
     private final int[] urlCodes;
 
-    public AlphabeticalAlgorithm(@Value("url.max.length") int arrayLength) {
+    public AlphabeticalAlgorithm(@Value("${url.max.length}") int arrayLength) {
         this.arrayLength = arrayLength;
         this.urlCodes = new int[arrayLength];
     }
 
     public String shorten(String url) {
+
+
+        while(getCurrentRank() < Integer.MAX_VALUE) {
+            final int nextCode = getNextCode();
+
+            if (validBounds(nextCode)) {
+                updateUrl(nextCode);
+                return urlToString();
+            }
+        }
+
+        return "";
+    }
+
+    private void updateUrl(int nextCode) {
+        final int currentRank = getCurrentRank();
+        this.urlCodes[currentRank] = nextCode;
+    }
+
+    private int getNextCode() {
         final int currentRank = getCurrentRank();
 
         final int currentCode = this.urlCodes[currentRank];
-        int newCode = incrementCode(currentCode);
-
-        if (validBounds(newCode)) {
-            return urlToString();
-        }
-
-        final int nextRank = currentRank + 1;
-
-
-        return UUID.randomUUID().toString();
+        return incrementCode(currentCode);
     }
 
     private int incrementCode(int currentCode) {
@@ -46,7 +56,7 @@ public class AlphabeticalAlgorithm implements ShortenAlgorithm {
             return DIGIT_START;
         }
 
-        if(DIGIT_START <= currentCode && currentCode < DIGIT_END) {
+        if(currentCode < DIGIT_END) {
             return currentCode + 1;
         }
 
@@ -71,7 +81,7 @@ public class AlphabeticalAlgorithm implements ShortenAlgorithm {
 
     private String urlToString() {
         final StringBuilder builder = new StringBuilder();
-        Arrays.stream(urlCodes).forEach(value -> builder.append((char)value));
+        Arrays.stream(urlCodes).filter(value -> value > 0).forEach(value -> builder.append((char)value));
 
         return builder.toString();
     }
@@ -82,7 +92,7 @@ public class AlphabeticalAlgorithm implements ShortenAlgorithm {
 
     private int getCurrentRank() {
         for (int i = 0; i < arrayLength; i++) {
-            if(urlCodes[i] > 0 && urlCodes[i] < LOWERCASE_END) {
+            if(urlCodes[i] < LOWERCASE_END) {
                 return i;
             }
         }

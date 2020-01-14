@@ -22,7 +22,7 @@ public class BannedWordValidator {
         try {
             //TODO check for file availability
             this.bannedWords = Files
-                    .lines(Paths.get(getClass().getClassLoader().getResource("fileTest.txt").toURI()))
+                    .lines(Paths.get(getClass().getClassLoader().getResource("censored.txt").toURI()))
                     .collect(Collectors.toSet());
         } catch (IOException | URISyntaxException e) {
             log.warn("Error reading banned words list");
