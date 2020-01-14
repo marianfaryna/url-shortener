@@ -1,5 +1,0 @@
-com/test/url/shortener/algorithm/AlphabeticalAlgorithm.class
-com/test/url/shortener/UrlShortenerApplication.class
-com/test/url/shortener/algorithm/ShortenAlgorithm.class
-com/test/url/shortener/validator/BannedWordValidator.class
-com/test/url/shortener/controller/ShortenerController.class
